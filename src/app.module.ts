@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { CompanyModule } from './modules/company/company.module';
+import { CharacteristicModule } from './modules/characteristic/characteristic.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CompanyModule } from './modules/company/company.module';
     CategoryModule,
     UserModule,
     CompanyModule,
+    CharacteristicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

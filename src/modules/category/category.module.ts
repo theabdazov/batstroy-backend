@@ -10,6 +10,7 @@ import { CategoryEntity } from './entity/category.entity';
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [TypeOrmModule, CategoryService],
 })
 export class CategoryModule {
 }
