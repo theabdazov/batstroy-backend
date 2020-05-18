@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { CompanyModule } from './modules/company/company.module';
 import { CharacteristicModule } from './modules/characteristic/characteristic.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CharacteristicModule } from './modules/characteristic/characteristic.mo
     UserModule,
     CompanyModule,
     CharacteristicModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
