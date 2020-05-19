@@ -10,6 +10,7 @@ import { FilesEntity } from './entity/files.entity';
   ],
   controllers: [FilesController],
   providers: [FilesService],
+  exports: [FilesService, TypeOrmModule],
 })
 export class FilesModule {
 }
