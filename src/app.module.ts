@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { CompanyModule } from './modules/company/company.module';
 import { CharacteristicModule } from './modules/characteristic/characteristic.module';
 import { FilesModule } from './modules/files/files.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FilesModule } from './modules/files/files.module';
     CompanyModule,
     CharacteristicModule,
     FilesModule,
+    ProductModule
   ],
   controllers: [AppController],
   providers: [AppService],
