@@ -12,6 +12,7 @@ import { CategoryModule } from '../category/category.module';
   ],
   controllers: [CharacteristicController],
   providers: [CharacteristicService],
+  exports: [CharacteristicService, TypeOrmModule],
 })
 export class CharacteristicModule {
 }
