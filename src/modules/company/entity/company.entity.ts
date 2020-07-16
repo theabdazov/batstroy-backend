@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity } from '../../user/entity/user.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('companies')
 export class CompanyEntity {
@@ -12,7 +11,4 @@ export class CompanyEntity {
 
   @Column()
   address: string;
-
-  @OneToMany(type => UserEntity, employee => employee.company)
-  employees: UserEntity[];
 }

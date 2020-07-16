@@ -6,6 +6,10 @@ export class UserAddingDto {
   @IsNotEmpty()
   fullName: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  phoneNumber: string;
+
   @ApiProperty({ required: false })
   companyId: number;
 }

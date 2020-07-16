@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, Like, Repository } from 'typeorm';
 import { toPromise } from '../../util/toPromise';
 import { plainToClass } from 'class-transformer';
 import { UserEntity } from './entity/user.entity';
 import { UserAddingDto } from './dto/user-adding.dto';
 import { UserDto } from './dto/user.dto';
 import { CompanyEntity } from '../company/entity/company.entity';
+import { UserFilter } from './dto/user-filter';
 
 @Injectable()
 export class UserService {
@@ -61,8 +62,17 @@ export class UserService {
     );
   }
 
-  getAll() {
-    return this.repo.find().then(
+  getAll(userFilter: UserFilter) {
+    const filter: FindConditions<UserEntity> = {};
+    if (userFilter) {
+      if (userFilter.fullName) {
+        filter.fullName = Like(`%${userFilter.fullName}%`);
+      }
+      if (userFilter.phoneNumber) {
+        filter.phoneNumber = Like(`%${userFilter.phoneNumber}%`);
+      }
+    }
+    return this.repo.find(filter).then(
       res => toPromise(plainToClass(UserDto, res)),
     );
   }

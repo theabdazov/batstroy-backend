@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserAddingDto } from './dto/user-adding.dto';
 import { UserDto } from './dto/user.dto';
+import { UserFilter } from './dto/user-filter';
 
 @ApiTags('users')
 @Controller('api/users')
@@ -53,7 +54,7 @@ export class UserController {
     isArray: true,
   })
   @Get()
-  getAll(): Promise<UserDto[]> {
-    return this.service.getAll();
+  getAll(@Query() query: UserFilter): Promise<UserDto[]> {
+    return this.service.getAll(query);
   }
 }

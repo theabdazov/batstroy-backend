@@ -10,7 +10,10 @@ export class UserEntity {
   @Column()
   fullName: string;
 
-  @ManyToOne(type => CompanyEntity, company => company.employees, { eager: true })
+  @Column()
+  phoneNumber: string;
+
+  @ManyToOne(() => CompanyEntity, { eager: true })
   company: CompanyEntity;
 
 }

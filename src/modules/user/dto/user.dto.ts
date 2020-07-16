@@ -8,6 +8,9 @@ export class UserDto {
   @ApiProperty()
   fullName: string;
 
+  @ApiProperty()
+  phoneNumber: number;
+
   @ApiProperty({ required: false })
   company: CompanyDto;
 }

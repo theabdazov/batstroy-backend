@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../../user/dto/user.dto';
 
 export class CompanyDto {
 
@@ -11,7 +10,4 @@ export class CompanyDto {
 
   @ApiProperty()
   address: string;
-
-  @ApiProperty()
-  employees: UserDto[];
 }
