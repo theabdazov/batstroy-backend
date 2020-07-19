@@ -42,6 +42,18 @@ export class CharacteristicService {
     return plainToClass(CharacteristicDto, entity);
   }
 
+
+  async getByCategoryId(categoryId: number): Promise<CharacteristicDto[]> {
+    const entities: CharacteristicEntity[] = await this.repo.find({
+      where: {
+        category: { id: categoryId }
+      },
+      order: { orderNumber: 'ASC' },
+    });
+    return plainToClass(CharacteristicDto, entities);
+  }
+
+
   async update(id: number, addingDto: CharacteristicAddingDto): Promise<CharacteristicDto> {
     const entity = plainToClass(CharacteristicEntity, {
       ...await this.repo.findOne(id),

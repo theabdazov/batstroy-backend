@@ -13,8 +13,11 @@ export class CharacteristicEntity {
   @Column('simple-array', { default: '' })
   valueList: string[];
 
+  @Column()
+  orderNumber: number;
+
   @ManyToOne(
-    type => CategoryEntity, category => category.characteristics, { eager: true },
+    type => CategoryEntity, category => category.characteristics, { eager: false },
   )
   category: CategoryEntity;
 

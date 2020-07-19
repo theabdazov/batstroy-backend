@@ -16,4 +16,8 @@ export class CharacteristicAddingDto {
   @IsNumber()
   @IsOptional()
   categoryId: number;
+
+  @ApiProperty({ required: false })
+  @IsNumber()
+  orderNumber: number;
 }

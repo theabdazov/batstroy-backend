@@ -11,6 +11,10 @@ export class CharacteristicDto {
   @ApiProperty()
   valueList: string[];
 
+
+  @ApiProperty()
+  orderNumber: number;
+
   @ApiProperty()
   category: CategoryDto;
 }

@@ -59,4 +59,14 @@ export class CharacteristicController {
     return this.service.getAll();
   }
 
+  @ApiResponse({
+    status: 200,
+    type: CharacteristicDto,
+    isArray: true,
+  })
+  @Get('category/:id')
+  getByCategory(@Param('id') id: number): Promise<CharacteristicDto[]> {
+    return this.service.getByCategoryId(id);
+  }
+
 }
