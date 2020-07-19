@@ -46,4 +46,9 @@ export class FilesService {
       () => toPromise(file),
     );
   }
+
+  async getAll(): Promise<FileDto[]> {
+    const entity = await this.repo.find();
+    return plainToClass(FileDto, entity);
+  }
 }

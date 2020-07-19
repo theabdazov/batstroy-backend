@@ -70,4 +70,14 @@ export class FilesController {
   seeUploadedFile(@Param('filename') image, @Res() res) {
     return res.sendFile(image, { root: './uploads' });
   }
+
+  @ApiResponse({
+    status: 200,
+    type: FileDto,
+    isArray: true
+  })
+  @Get()
+  getAll() {
+    return this.service.getAll();
+  }
 }
