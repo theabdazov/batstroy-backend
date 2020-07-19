@@ -26,9 +26,8 @@ export class CategoryEntity {
   @Column()
   orderNumber: string;
 
-  @ManyToOne(() => FilesEntity, { eager: true })
-  @JoinColumn({ name: "imageId" })
-  image: FilesEntity;
+  @Column()
+  imageUrl: string;
 
   @TreeChildren()
   children: CategoryEntity[];
