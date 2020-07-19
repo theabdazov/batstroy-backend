@@ -12,5 +12,8 @@ export class CategoryDto {
   name: string;
 
   @ApiProperty()
+  orderNumber: number;
+
+  @ApiProperty()
   imageUrl: string;
 }

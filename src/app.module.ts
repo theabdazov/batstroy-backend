@@ -10,6 +10,7 @@ import { CharacteristicModule } from './modules/characteristic/characteristic.mo
 import { FilesModule } from './modules/files/files.module';
 import { ProductModule } from './modules/product/product.module';
 import { CharacteristicValueModule } from './modules/characteristic-value/characteristic-value.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { CharacteristicValueModule } from './modules/characteristic-value/charac
     CharacteristicModule,
     FilesModule,
     ProductModule,
-    CharacteristicValueModule
+    CharacteristicValueModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

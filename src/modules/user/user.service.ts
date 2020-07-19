@@ -8,6 +8,8 @@ import { UserAddingDto } from './dto/user-adding.dto';
 import { UserDto } from './dto/user.dto';
 import { CompanyEntity } from '../company/entity/company.entity';
 import { UserFilter } from './dto/user-filter';
+import { UserCredentialsDto } from './dto/user-credentials.dto';
+import { comparePasswords } from '../../util/compare-password';
 
 @Injectable()
 export class UserService {
@@ -38,11 +40,27 @@ export class UserService {
 
   async getById(id: number): Promise<UserDto> {
     const entity: UserEntity = await this.repo.findOne(id);
-    console.log(entity);
     if (!entity) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     return plainToClass(UserDto, entity);
+  }
+
+  async getByPhoneNumber({ phoneNumber, password }: UserCredentialsDto): Promise<UserDto> {
+    const user = await this.repo.findOne({ where: { phoneNumber } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+    const areEqual = await comparePasswords(user.password, password);
+    if (!areEqual) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+    return plainToClass(UserDto, user);
+  }
+
+  async findByPayload({ phoneNumber }:  Partial<UserCredentialsDto>): Promise<UserDto> {
+    const user = await this.repo.findOne({ where: { phoneNumber } });
+    return plainToClass(UserDto, user);
   }
 
   async update(id: number, userAddingDto: UserAddingDto): Promise<UserDto> {
@@ -73,7 +91,7 @@ export class UserService {
       }
     }
     return this.repo.find(filter).then(
-      res => toPromise(plainToClass(UserDto, res)),
+      res => toPromise(plainToClass(UserDto, res, )),
     );
   }
 

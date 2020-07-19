@@ -10,6 +10,10 @@ export class UserAddingDto {
   @IsNotEmpty()
   phoneNumber: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  password: string;
+
   @ApiProperty({ required: false })
   companyId: number;
 }

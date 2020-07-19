@@ -9,6 +9,10 @@ export class CategoryAddingDto {
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  orderNumber: number;
+
   @ApiProperty({ required: false})
   imageUrl?: string;
 }

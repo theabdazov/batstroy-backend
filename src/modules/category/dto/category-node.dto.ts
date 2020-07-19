@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { FileDto } from '../../files/dto/file.dto';
 
 export class CategoryNodeDto {
   @ApiProperty()
@@ -7,6 +8,9 @@ export class CategoryNodeDto {
 
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  orderNumber: number;
 
   @ApiProperty()
   imageUrl?: string;

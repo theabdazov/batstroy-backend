@@ -1,19 +1,34 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm';
+import {
+  Column,
+  Entity, JoinColumn,
+  ManyToMany, ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
+} from 'typeorm';
 import { CharacteristicEntity } from '../../characteristic/entity/characteristic.entity';
 import { ProductEntity } from '../../product/entity/product.entity';
+import { FilesEntity } from '../../files/entity/files.entity';
 
 @Entity('categories')
-@Tree('materialized-path')
+@Tree('closure-table')
 export class CategoryEntity {
 
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
 
   @Column()
-  imageUrl: string;
+  orderNumber: string;
+
+  @ManyToOne(() => FilesEntity, { eager: true })
+  @JoinColumn({ name: "imageId" })
+  image: FilesEntity;
 
   @TreeChildren()
   children: CategoryEntity[];

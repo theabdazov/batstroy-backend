@@ -31,7 +31,7 @@ export class CategoryService {
       }
     }
     return this.repo.save(categoryEntity).then(
-      res => toPromise(plainToClass(CategoryDto, res)),
+      res => this.getById(res.id),
     );
   }
 
@@ -68,7 +68,9 @@ export class CategoryService {
 
   getTrees() {
     return this.repo.findTrees().then(
-      res => toPromise(plainToClass(CategoryNodeDto, res)),
+      res => {
+        return toPromise(this.sortTree(plainToClass(CategoryNodeDto, res)));
+      },
     );
   }
 
@@ -80,6 +82,20 @@ export class CategoryService {
     return this.repo.findDescendantsTree(entity).then(
       res => toPromise(plainToClass(CategoryNodeDto, res)),
     );
+  }
+
+  sortTree(unsortedTree: CategoryNodeDto[]): CategoryNodeDto[] {
+    const sortList = (list: CategoryNodeDto[]): CategoryNodeDto[] => {
+      list.forEach(item => {
+        if (item.children && item.children.length) {
+          item.children = sortList(item.children);
+        }
+      });
+      return list.sort((a, b) => {
+        return a.orderNumber - b.orderNumber;
+      });
+    };
+    return sortList(unsortedTree);
   }
 
 }
