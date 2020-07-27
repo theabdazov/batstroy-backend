@@ -26,7 +26,7 @@ export class CategoryEntity {
   @Column()
   orderNumber: string;
 
-  @Column()
+  @Column({nullable: true})
   imageUrl: string;
 
   @TreeChildren()

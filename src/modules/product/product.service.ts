@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, In, Like, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { ProductEntity } from './entity/product.entity';
 import { ProductAddingDto } from './dto/product-adding.dto';
 import { ProductDto } from './dto/product.dto';
+import { PaginationPageDto } from '../dto/pagination-page.dto';
+import { ProductFilter } from './dto/product-filter';
 import { CategoryEntity } from '../category/entity/category.entity';
-import { ProductPhotoEntity } from './entity/product-photo.entity';
+import { ProductFilterPublic } from './dto/product-filter-public';
+import { ProductShortPublic } from './dto/product-short-public';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ProductService {
 
   constructor(
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
-    @InjectRepository(ProductPhotoEntity) private repoProductPhoto: Repository<ProductPhotoEntity>,
     @InjectRepository(CategoryEntity) private repoCategory: Repository<CategoryEntity>,
+    private categoryService: CategoryService,
   ) {
   }
 
@@ -23,28 +27,13 @@ export class ProductService {
       ...this.repo.create(),
       ...addingDto,
     });
-    if (addingDto.categoryId) {
-      product.category = await this.repoCategory.findOneOrFail(addingDto.categoryId);
-    }
-
     const productEntity = await this.repo.save(product);
-    if (addingDto.photoIds && addingDto.photoIds.length) {
-      await this.repoProductPhoto.insert(
-        addingDto.photoIds.map(photoId => {
-          return {
-            ...this.repoProductPhoto.create(),
-            product: productEntity,
-            photo: { id: photoId },
-          };
-        }),
-      );
-    }
     return this.getById(productEntity.id);
   }
 
   async getById(id: number): Promise<ProductDto> {
     const entity: ProductEntity = await this.repo.findOneOrFail(id);
-    return ProductDto.from(entity);
+    return plainToClass(ProductDto, entity);
   }
 
   async update(id: number, addingDto: ProductAddingDto): Promise<ProductDto> {
@@ -52,20 +41,6 @@ export class ProductService {
       ...await this.repo.findOne(id),
       ...addingDto,
     });
-    if (addingDto.categoryId) {
-      product.category = await this.repoCategory.findOneOrFail(addingDto.categoryId);
-    }
-    if (addingDto.photoIds && addingDto.photoIds.length) {
-      await this.repoProductPhoto.insert(
-        addingDto.photoIds.map(photoId => {
-          return {
-            ...this.repoProductPhoto.create(),
-            product: product,
-            photo: { id: photoId },
-          };
-        }),
-      );
-    }
     await this.repo.save(product);
     return this.getById(id);
   }
@@ -77,13 +52,51 @@ export class ProductService {
     );
   }
 
-  getAll() {
-    return this.repo.find().then(
-      res => {
-        if (res && res.length) {
-          return res.map(entity => ProductDto.from(entity));
-        }
-        return [];
+  getProductList(adminFilter: ProductFilter): Promise<PaginationPageDto<ProductDto>> {
+    const filter: FindConditions<ProductEntity> = {};
+    if (adminFilter) {
+      if (adminFilter.id) {
+        filter.id = adminFilter.id;
+      }
+      if (adminFilter.name) {
+        filter.name = Like(`%${adminFilter.name}%`);
+      }
+      if (adminFilter.categoryIds && adminFilter.categoryIds.length) {
+        filter.categoryId = In(adminFilter.categoryIds);
+      }
+    }
+    return this.repo.findAndCount({ skip: adminFilter.page, take: adminFilter.count, where: filter }).then(
+      result => {
+        return {
+          data: plainToClass(ProductDto, result[0]),
+          totalCount: result[1],
+        };
+      },
+    );
+  }
+
+  async getProductListPublic(filter: ProductFilterPublic) {
+    const findConditions: FindConditions<ProductEntity> = {};
+    if (filter) {
+      if (filter.name) {
+        findConditions.name = Like(`%${filter.name}%`);
+      }
+      if (filter.categoryId) {
+        const ids = await this.categoryService.getDescendantsTreesIds(filter.categoryId);
+        findConditions.id = In(ids);
+      }
+    }
+    return this.repo.findAndCount({
+      skip: filter.page,
+      take: filter.count,
+      where: findConditions,
+      loadEagerRelations: false,
+    }).then(
+      result => {
+        return {
+          data: plainToClass(ProductShortPublic, result[0]),
+          totalCount: result[1],
+        };
       },
     );
   }

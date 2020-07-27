@@ -8,7 +8,7 @@ import { FileAddingDto } from './dto/file-adding-dto';
 import { FileDto } from './dto/file.dto';
 
 const storageOptions = diskStorage({
-  destination: './uploads',
+  destination: './public/uploads',
   filename: (req, file, callback) => {
     const name = file.originalname.split('.')[0];
     const fileExtName = extname(file.originalname);
@@ -59,7 +59,7 @@ export class FilesController {
       const fileAddingDto: FileAddingDto = {
         filename: file.filename,
         originalFilename: file.originalname,
-        path: `/api/files/${file.filename}`,
+        path: `/uploads/${file.filename}`,
       };
       response.push(fileAddingDto);
     });

@@ -1,6 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CategoryEntity } from '../../category/entity/category.entity';
-import { ProductPhotoEntity } from './product-photo.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -15,20 +14,21 @@ export class ProductEntity {
   desc: string;
 
   @Column()
+  ownerPrice: number;
+
+  @Column()
   price: number;
 
-  @ManyToOne(
-    () => CategoryEntity,
-    category => category.products,
-    { eager: true, cascade: ['insert'] },
-  )
+  @Column({ default: false })
+  active: boolean;
+
+  @ManyToOne(() => CategoryEntity, category => category.products, {eager: true})
   @JoinColumn({ name: 'categoryId' })
   category: CategoryEntity;
 
-  @OneToMany(
-    () => ProductPhotoEntity,
-    photo => photo.product,
-    { eager: true },
-  )
-  photos: ProductPhotoEntity[];
+  @Column()
+  categoryId: number;
+
+  @Column('simple-array')
+  photos: string[];
 }

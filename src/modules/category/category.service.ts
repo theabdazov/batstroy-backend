@@ -84,6 +84,26 @@ export class CategoryService {
     );
   }
 
+  async getDescendantsTreesIds(id: number): Promise<number[]> {
+    const node = await this.getDescendantsTrees(id);
+    if (node) {
+      const ids = [];
+      const recursion = (list: CategoryNodeDto[]) => {
+        list.forEach(item => {
+          ids.push(item.id);
+          if (item.children && item.children.length) {
+            recursion(item.children);
+          }
+        });
+      };
+      ids.push(node.id);
+      recursion(node.children);
+      return ids;
+    } else {
+      return [];
+    }
+  }
+
   sortTree(unsortedTree: CategoryNodeDto[]): CategoryNodeDto[] {
     const sortList = (list: CategoryNodeDto[]): CategoryNodeDto[] => {
       list.forEach(item => {

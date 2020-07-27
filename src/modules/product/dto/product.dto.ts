@@ -2,7 +2,7 @@ import { FileDto } from '../../files/dto/file.dto';
 import { CategoryDto } from '../../category/dto/category.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductEntity } from '../entity/product.entity';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, Type } from 'class-transformer';
 
 export class ProductDto {
   @ApiProperty()
@@ -15,19 +15,18 @@ export class ProductDto {
   desc: string;
 
   @ApiProperty()
-  price: number;
-
-  @ApiProperty({ type: [FileDto] })
-  photos: FileDto[];
+  active: boolean;
 
   @ApiProperty()
-  category: CategoryDto;
+  ownerPrice: number;
 
-  static from(product: ProductEntity): ProductDto {
-    return {
-      ...product,
-      photos: plainToClass(FileDto, product.photos && product.photos.map(item => item.photo)),
-      category: plainToClass(CategoryDto, product.category),
-    };
-  }
+  @ApiProperty()
+  price: number;
+
+  @ApiProperty({ isArray: true })
+  photos: string[];
+
+  @ApiProperty()
+  @Type(() => CategoryDto)
+  category: CategoryDto;
 }

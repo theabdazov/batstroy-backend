@@ -13,13 +13,18 @@ export class ProductAddingDto {
 
   @ApiProperty()
   @IsNumber()
-  price: number;
-
-  @ApiProperty({type: [Number]})
-  @IsArray()
-  photoIds: number[];
+  ownerPrice: number;
 
   @ApiProperty()
   @IsNumber()
+  price: number;
+
+  @ApiProperty()
+  active: boolean;
+
+  @ApiProperty({isArray: true})
+  photos: string[];
+
+  @ApiProperty()
   categoryId: number;
 }
