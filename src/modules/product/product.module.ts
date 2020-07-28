@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './entity/product.entity';
 import { CategoryModule } from '../category/category.module';
 import { FilesModule } from '../files/files.module';
+import { CharacteristicValueModule } from '../characteristic-value/characteristic-value.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductEntity]),
     CategoryModule,
     FilesModule,
+    CharacteristicValueModule
   ],
   controllers: [ProductController],
   providers: [ProductService],

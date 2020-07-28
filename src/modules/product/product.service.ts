@@ -11,6 +11,8 @@ import { CategoryEntity } from '../category/entity/category.entity';
 import { ProductFilterPublic } from './dto/product-filter-public';
 import { ProductShortPublic } from './dto/product-short-public';
 import { CategoryService } from '../category/category.service';
+import { CharacteristicValueService } from '../characteristic-value/characteristic-value.service';
+import { ProductDetailPublic } from './dto/product-detail-public';
 
 @Injectable()
 export class ProductService {
@@ -19,6 +21,7 @@ export class ProductService {
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
     @InjectRepository(CategoryEntity) private repoCategory: Repository<CategoryEntity>,
     private categoryService: CategoryService,
+    private characteristicValueService: CharacteristicValueService,
   ) {
   }
 
@@ -28,12 +31,16 @@ export class ProductService {
       ...addingDto,
     });
     const productEntity = await this.repo.save(product);
+    if (addingDto.characteristicValues && addingDto.characteristicValues.length){
+      await this.characteristicValueService.addingMany(productEntity.id, addingDto.characteristicValues)
+    }
     return this.getById(productEntity.id);
   }
 
   async getById(id: number): Promise<ProductDto> {
     const entity: ProductEntity = await this.repo.findOneOrFail(id);
-    return plainToClass(ProductDto, entity);
+    const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
+    return {...plainToClass(ProductDto, entity), characteristicValues: characteristicValueDto};
   }
 
   async update(id: number, addingDto: ProductAddingDto): Promise<ProductDto> {
@@ -65,7 +72,14 @@ export class ProductService {
         filter.categoryId = In(adminFilter.categoryIds);
       }
     }
-    return this.repo.findAndCount({ skip: adminFilter.page, take: adminFilter.count, where: filter }).then(
+    return this.repo.findAndCount({
+      skip: adminFilter.page * adminFilter.count,
+      take: adminFilter.count,
+      where: filter,
+      order: {
+        id: 'ASC'
+      }
+    }).then(
       result => {
         return {
           data: plainToClass(ProductDto, result[0]),
@@ -99,6 +113,12 @@ export class ProductService {
         };
       },
     );
+  }
+
+  async getByIdPublic(id: number): Promise<ProductDetailPublic> {
+    const entity: ProductEntity = await this.repo.findOneOrFail(id);
+    const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
+    return {...plainToClass(ProductDetailPublic, entity), characteristicValues: characteristicValueDto};
   }
 
 }

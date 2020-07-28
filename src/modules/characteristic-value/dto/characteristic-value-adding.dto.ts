@@ -8,6 +8,4 @@ export class CharacteristicValueAddingDto {
   @ApiProperty()
   characteristicId: number;
 
-  @ApiProperty()
-  productId: number;
 }

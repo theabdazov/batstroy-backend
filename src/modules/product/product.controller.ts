@@ -68,4 +68,14 @@ export class ProductController {
   getProductListPublic(@Body() filter: ProductFilterPublic): Promise<PaginationPageDto<ProductShortPublic>> {
     return this.service.getProductListPublic(filter);
   }
+
+  @ApiResponse({
+    status: 200,
+    type: ProductShortPublic,
+  })
+  @Get(':id/public')
+  getByIdPublic(@Param('id') id: number): Promise<ProductShortPublic> {
+    return this.service.getByIdPublic(id);
+  }
+
 }

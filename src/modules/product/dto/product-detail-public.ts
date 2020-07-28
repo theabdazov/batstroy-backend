@@ -1,34 +1,27 @@
-import { CategoryDto } from '../../category/dto/category.dto';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { CharacteristicValueDto } from '../../characteristic-value/dto/characteristic-value.dto';
 
-export class ProductDto {
+@Exclude()
+export class ProductDetailPublic {
+
+  @Expose()
   @ApiProperty()
   id: number;
 
+  @Expose()
   @ApiProperty()
   name: string;
 
-  @ApiProperty()
-  desc: string;
-
-  @ApiProperty()
-  active: boolean;
-
-  @ApiProperty()
-  ownerPrice: number;
-
+  @Expose()
   @ApiProperty()
   price: number;
 
+  @Expose()
   @ApiProperty({ isArray: true })
   photos: string[];
 
-  @ApiProperty()
-  @Type(() => CategoryDto)
-  category: CategoryDto;
-
+  @Expose()
   @ApiProperty()
   @Type(() => CharacteristicValueDto)
   characteristicValues: CharacteristicValueDto[];
