@@ -18,6 +18,10 @@ export class ProductDetailPublic {
   price: number;
 
   @Expose()
+  @ApiProperty()
+  desc: string;
+
+  @Expose()
   @ApiProperty({ isArray: true })
   photos: string[];
 
