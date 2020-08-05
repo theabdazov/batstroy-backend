@@ -11,6 +11,7 @@ import { FilesModule } from './modules/files/files.module';
 import { ProductModule } from './modules/product/product.module';
 import { CharacteristicValueModule } from './modules/characteristic-value/characteristic-value.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
     ProductModule,
     CharacteristicValueModule,
     AuthModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

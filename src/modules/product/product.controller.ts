@@ -78,4 +78,14 @@ export class ProductController {
     return this.service.getByIdPublic(id);
   }
 
+  @ApiResponse({
+    status: 200,
+    type: ProductShortPublic,
+    isArray: true
+  })
+  @Post('ids')
+  getByIdsPublic(@Body() ids: number[]): Promise<ProductShortPublic[]> {
+    return this.service.getByIdsPublic(ids);
+  }
+
 }
