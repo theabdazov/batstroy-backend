@@ -101,7 +101,7 @@ export class ProductService {
       }
     }
     return this.repo.findAndCount({
-      skip: filter.page,
+      skip:  filter.page * filter.count,
       take: filter.count,
       where: findConditions,
       loadEagerRelations: false,
