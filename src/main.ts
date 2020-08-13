@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
   const configService = app.get(ConfigService);
   const port = configService.get('APP_PORT');
   const options = new DocumentBuilder().build();
