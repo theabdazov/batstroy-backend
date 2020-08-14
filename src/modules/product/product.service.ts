@@ -96,8 +96,8 @@ export class ProductService {
         findConditions.name = Like(`%${filter.name}%`);
       }
       if (filter.categoryId) {
-        const ids = await this.categoryService.getDescendantsTreesIds(filter.categoryId);
-        findConditions.id = In(ids);
+        const ids = [filter.categoryId, ...await this.categoryService.getDescendantsTreesIds(filter.categoryId)];
+        findConditions.categoryId = In(ids);
       }
     }
     return this.repo.findAndCount({
@@ -107,6 +107,7 @@ export class ProductService {
       loadEagerRelations: false,
     }).then(
       result => {
+        console.log(result);
         return {
           data: plainToClass(ProductShortPublic, result[0]),
           totalCount: result[1],
