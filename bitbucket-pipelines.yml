@@ -6,5 +6,5 @@ pipelines:
             variables:
               SSH_USER: $SSH_USER
               SERVER: $SERVER
-              MODE: 'script'
+              MODE: 'command'
               COMMAND: './refresh-back.sh'
