@@ -1,0 +1,10 @@
+pipelines:
+  default:
+    - step:
+        script:
+          - pipe: atlassian/ssh-run:0.2.6
+            variables:
+              SSH_USER: $SSH_USER
+              SERVER: $SERVER
+              MODE: 'script'
+              COMMAND: 'refresh-back.sh'
