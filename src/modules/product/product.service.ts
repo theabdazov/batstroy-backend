@@ -107,7 +107,6 @@ export class ProductService {
       loadEagerRelations: false,
     }).then(
       result => {
-        console.log(result);
         return {
           data: plainToClass(ProductShortPublic, result[0]),
           totalCount: result[1],
