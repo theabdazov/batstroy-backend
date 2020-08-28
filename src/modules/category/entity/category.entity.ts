@@ -14,7 +14,7 @@ import { ProductEntity } from '../../product/entity/product.entity';
 import { FilesEntity } from '../../files/entity/files.entity';
 
 @Entity('categories')
-@Tree('closure-table')
+@Tree("materialized-path")
 export class CategoryEntity {
 
   @PrimaryGeneratedColumn()
