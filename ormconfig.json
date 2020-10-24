@@ -1,6 +1,6 @@
 {
   "type": "postgres",
-  "host": "localhost",
+  "host": "176.126.166.123",
   "port": 5432,
   "username": "postgres",
   "password": "batstroy2020",

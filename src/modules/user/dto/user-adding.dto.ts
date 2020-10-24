@@ -10,8 +10,7 @@ export class UserAddingDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   password: string;
 
   @ApiProperty({ required: false })

@@ -1,6 +1,14 @@
-import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { CompanyEntity } from '../../company/entity/company.entity';
-import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 
@@ -20,10 +28,5 @@ export class UserEntity {
 
   @ManyToOne(() => CompanyEntity, { eager: true })
   company: CompanyEntity;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
 
 }

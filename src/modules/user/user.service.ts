@@ -10,6 +10,7 @@ import { CompanyEntity } from '../company/entity/company.entity';
 import { UserFilter } from './dto/user-filter';
 import { UserCredentialsDto } from './dto/user-credentials.dto';
 import { comparePasswords } from '../../util/compare-password';
+import { passwordToHash } from '../../util/password-to-hash';
 
 @Injectable()
 export class UserService {
@@ -21,18 +22,14 @@ export class UserService {
   }
 
   async create(userAddingDto: UserAddingDto): Promise<UserDto> {
+    const { password, companyId, ...data } = userAddingDto;
     const user = plainToClass(UserEntity, {
       ...this.repo.create(),
-      ...userAddingDto,
+      ...data,
+      company: companyId ? { id: companyId } : null,
+      password: await passwordToHash(password),
     });
-    if (userAddingDto.companyId) {
-      const company = await this.companyRepo.findOne(userAddingDto.companyId);
-      if (company) {
-        user.company = company;
-      } else {
-        throw new HttpException('company not found', HttpStatus.NOT_FOUND);
-      }
-    }
+
     return this.repo.save(user).then(
       res => toPromise(plainToClass(UserDto, res)),
     );
@@ -58,18 +55,23 @@ export class UserService {
     return plainToClass(UserDto, user);
   }
 
-  async findByPayload({ phoneNumber }:  Partial<UserCredentialsDto>): Promise<UserDto> {
+  async findByPayload({ phoneNumber }: Partial<UserCredentialsDto>): Promise<UserDto> {
     const user = await this.repo.findOne({ where: { phoneNumber } });
     return plainToClass(UserDto, user);
   }
 
   async update(id: number, userAddingDto: UserAddingDto): Promise<UserDto> {
-    const company = plainToClass(UserEntity, {
+    const { password, companyId, ...data } = userAddingDto;
+    const userEntity = plainToClass(UserEntity, {
       ...await this.repo.findOne(id),
-      ...userAddingDto,
+      ...data,
+      company: companyId ? { id: companyId } : null,
     });
-    return this.repo.save(company).then(
-      res => toPromise(plainToClass(UserDto, res)),
+    if (password) {
+      userEntity.password = await passwordToHash(password);
+    }
+    return this.repo.save(userEntity).then(
+      res => plainToClass(UserDto, res),
     );
   }
 
@@ -91,7 +93,7 @@ export class UserService {
       }
     }
     return this.repo.find(filter).then(
-      res => toPromise(plainToClass(UserDto, res, )),
+      res => toPromise(plainToClass(UserDto, res)),
     );
   }
 
