@@ -75,6 +75,9 @@ export class ProductService {
       if (adminFilter.categoryIds && adminFilter.categoryIds.length) {
         filter.categoryId = In(adminFilter.categoryIds);
       }
+      if (adminFilter.companyIds && adminFilter.companyIds.length) {
+        filter.company = In(adminFilter.companyIds);
+      }
     }
     return this.repo.findAndCount({
       skip: adminFilter.page * adminFilter.count,
@@ -83,6 +86,7 @@ export class ProductService {
       order: {
         id: 'ASC',
       },
+      relations: ['company']
     }).then(
       result => {
         return {
