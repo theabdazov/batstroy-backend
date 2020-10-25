@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CategoryEntity } from '../../category/entity/category.entity';
 import { CompanyEntity } from '../../company/entity/company.entity';
+import { SaleTypeEntity } from '../../sale-type/entity/sale-type.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -32,6 +33,9 @@ export class ProductEntity {
 
   @ManyToOne(() => CompanyEntity, { eager: false, nullable: true })
   company: CompanyEntity;
+
+  @ManyToOne(() => SaleTypeEntity, { eager: true })
+  saleType: SaleTypeEntity;
 
   @Column('simple-array')
   photos: string[];

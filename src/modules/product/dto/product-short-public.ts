@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { SaleTypeDto } from '../../sale-type/dto/sale-type.dto';
 
 @Exclude()
 export class ProductShortPublic {
@@ -19,4 +20,9 @@ export class ProductShortPublic {
   @Expose()
   @ApiProperty({ isArray: true })
   photos: string[];
+
+  @Expose()
+  @ApiProperty()
+  @Type(() => SaleTypeDto)
+  saleType: SaleTypeDto;
 }

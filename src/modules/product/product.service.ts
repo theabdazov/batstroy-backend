@@ -26,11 +26,12 @@ export class ProductService {
   }
 
   async create(addingDto: ProductAddingDto): Promise<ProductDto> {
-    const { companyId, ...data } = addingDto;
+    const { companyId, saleTypeId, ...data } = addingDto;
     const product = plainToClass(ProductEntity, {
       ...this.repo.create(),
       ...data,
       company: companyId ? { id: companyId } : null,
+      saleType: saleTypeId ? { id: saleTypeId } : null,
     });
     const productEntity = await this.repo.save(product);
     if (addingDto.characteristicValues && addingDto.characteristicValues.length) {
@@ -46,11 +47,12 @@ export class ProductService {
   }
 
   async update(id: number, addingDto: ProductAddingDto): Promise<ProductDto> {
-    const { companyId, ...data } = addingDto;
+    const { companyId, saleTypeId, ...data } = addingDto;
     const product = plainToClass(ProductEntity, {
       ...await this.repo.findOne(id),
       ...data,
       company: companyId ? { id: companyId } : null,
+      saleType: saleTypeId ? { id: saleTypeId } : null,
     });
     await this.repo.save(product);
     return this.getById(id);
@@ -86,7 +88,7 @@ export class ProductService {
       order: {
         id: 'ASC',
       },
-      relations: ['company']
+      relations: ['company', 'saleType']
     }).then(
       result => {
         return {
@@ -113,6 +115,7 @@ export class ProductService {
       take: filter.count,
       where: findConditions,
       loadEagerRelations: false,
+      relations: ['saleType']
     }).then(
       result => {
         return {
@@ -124,7 +127,7 @@ export class ProductService {
   }
 
   async getByIdPublic(id: number): Promise<ProductDetailPublic> {
-    const entity: ProductEntity = await this.repo.findOneOrFail(id);
+    const entity: ProductEntity = await this.repo.findOneOrFail(id, {relations: ['saleType']});
     const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
     return { ...plainToClass(ProductDetailPublic, entity), characteristicValues: characteristicValueDto };
   }
