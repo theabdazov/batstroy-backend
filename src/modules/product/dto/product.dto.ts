@@ -2,6 +2,7 @@ import { CategoryDto } from '../../category/dto/category.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CharacteristicValueDto } from '../../characteristic-value/dto/characteristic-value.dto';
+import { CompanyDto } from '../../company/dto/company.dto';
 
 export class ProductDto {
   @ApiProperty()
@@ -28,6 +29,10 @@ export class ProductDto {
   @ApiProperty()
   @Type(() => CategoryDto)
   category: CategoryDto;
+
+  @ApiProperty()
+  @Type(() => CompanyDto)
+  company: CompanyDto;
 
   @ApiProperty()
   @Type(() => CharacteristicValueDto)

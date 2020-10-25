@@ -30,5 +30,8 @@ export class ProductAddingDto {
   categoryId: number;
 
   @ApiProperty()
+  companyId: number;
+
+  @ApiProperty()
   characteristicValues: CharacteristicValueAddingDto[];
 }

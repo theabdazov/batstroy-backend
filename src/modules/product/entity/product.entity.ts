@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CategoryEntity } from '../../category/entity/category.entity';
+import { CompanyEntity } from '../../company/entity/company.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -22,12 +23,15 @@ export class ProductEntity {
   @Column({ default: false })
   active: boolean;
 
-  @ManyToOne(() => CategoryEntity, category => category.products, {eager: true})
+  @ManyToOne(() => CategoryEntity, category => category.products, { eager: true })
   @JoinColumn({ name: 'categoryId' })
   category: CategoryEntity;
 
   @Column()
   categoryId: number;
+
+  @ManyToOne(() => CompanyEntity, { eager: false, nullable: true })
+  company: CompanyEntity;
 
   @Column('simple-array')
   photos: string[];

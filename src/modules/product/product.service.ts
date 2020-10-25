@@ -26,9 +26,11 @@ export class ProductService {
   }
 
   async create(addingDto: ProductAddingDto): Promise<ProductDto> {
+    const { companyId, ...data } = addingDto;
     const product = plainToClass(ProductEntity, {
       ...this.repo.create(),
-      ...addingDto,
+      ...data,
+      company: companyId ? { id: companyId } : null,
     });
     const productEntity = await this.repo.save(product);
     if (addingDto.characteristicValues && addingDto.characteristicValues.length) {
@@ -38,15 +40,17 @@ export class ProductService {
   }
 
   async getById(id: number): Promise<ProductDto> {
-    const entity: ProductEntity = await this.repo.findOneOrFail(id);
+    const entity: ProductEntity = await this.repo.findOneOrFail(id, {relations: ['company']});
     const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
     return { ...plainToClass(ProductDto, entity), characteristicValues: characteristicValueDto };
   }
 
   async update(id: number, addingDto: ProductAddingDto): Promise<ProductDto> {
+    const { companyId, ...data } = addingDto;
     const product = plainToClass(ProductEntity, {
       ...await this.repo.findOne(id),
-      ...addingDto,
+      ...data,
+      company: companyId ? { id: companyId } : null,
     });
     await this.repo.save(product);
     return this.getById(id);
@@ -101,7 +105,7 @@ export class ProductService {
       }
     }
     return this.repo.findAndCount({
-      skip:  filter.page * filter.count,
+      skip: filter.page * filter.count,
       take: filter.count,
       where: findConditions,
       loadEagerRelations: false,
