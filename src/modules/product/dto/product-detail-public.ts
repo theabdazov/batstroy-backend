@@ -1,7 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { CharacteristicValueDto } from '../../characteristic-value/dto/characteristic-value.dto';
 import { SaleTypeDto } from '../../sale-type/dto/sale-type.dto';
+import { ProductCharacteristicDto } from '../../product-characteristic/product-characteristic.dto';
 
 @Exclude()
 export class ProductDetailPublic {
@@ -32,7 +32,7 @@ export class ProductDetailPublic {
   saleType: SaleTypeDto;
 
   @Expose()
-  @ApiProperty()
-  @Type(() => CharacteristicValueDto)
-  characteristicValues: CharacteristicValueDto[];
+  @ApiProperty({ isArray: true })
+  @Type(() => ProductCharacteristicDto)
+  characteristics: ProductCharacteristicDto[];
 }

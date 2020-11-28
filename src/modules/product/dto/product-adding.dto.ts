@@ -1,6 +1,6 @@
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CharacteristicValueAddingDto } from '../../characteristic-value/dto/characteristic-value-adding.dto';
+import { ProductCharacteristicAddingDto } from '../../product-characteristic/product-characteristic-adding.dto';
 
 export class ProductAddingDto {
 
@@ -35,6 +35,6 @@ export class ProductAddingDto {
   @ApiProperty()
   saleTypeId: number;
 
-  @ApiProperty()
-  characteristicValues: CharacteristicValueAddingDto[];
+  @ApiProperty({ isArray: true })
+  characteristics: ProductCharacteristicAddingDto[];
 }

@@ -11,8 +11,8 @@ import { CategoryEntity } from '../category/entity/category.entity';
 import { ProductFilterPublic } from './dto/product-filter-public';
 import { ProductShortPublic } from './dto/product-short-public';
 import { CategoryService } from '../category/category.service';
-import { CharacteristicValueService } from '../characteristic-value/characteristic-value.service';
 import { ProductDetailPublic } from './dto/product-detail-public';
+import { ProductCharacteristicService } from '../product-characteristic/product-characteristic.service';
 
 @Injectable()
 export class ProductService {
@@ -21,7 +21,7 @@ export class ProductService {
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
     @InjectRepository(CategoryEntity) private repoCategory: Repository<CategoryEntity>,
     private categoryService: CategoryService,
-    private characteristicValueService: CharacteristicValueService,
+    private productCharacteristicService: ProductCharacteristicService,
   ) {
   }
 
@@ -34,16 +34,16 @@ export class ProductService {
       saleType: saleTypeId ? { id: saleTypeId } : null,
     });
     const productEntity = await this.repo.save(product);
-    if (addingDto.characteristicValues && addingDto.characteristicValues.length) {
-      await this.characteristicValueService.addingMany(productEntity.id, addingDto.characteristicValues);
+    if (addingDto.characteristics && addingDto.characteristics.length) {
+      await this.productCharacteristicService.addingMany(productEntity.id, addingDto.characteristics);
     }
     return this.getById(productEntity.id);
   }
 
   async getById(id: number): Promise<ProductDto> {
-    const entity: ProductEntity = await this.repo.findOneOrFail(id, {relations: ['company']});
-    const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
-    return { ...plainToClass(ProductDto, entity), characteristicValues: characteristicValueDto };
+    const entity: ProductEntity = await this.repo.findOneOrFail(id, { relations: ['company'] });
+    const characteristics = await this.productCharacteristicService.getByProductId(id);
+    return { ...plainToClass(ProductDto, entity), characteristics: characteristics };
   }
 
   async update(id: number, addingDto: ProductAddingDto): Promise<ProductDto> {
@@ -55,6 +55,12 @@ export class ProductService {
       saleType: saleTypeId ? { id: saleTypeId } : null,
     });
     await this.repo.save(product);
+    if (addingDto.characteristics && addingDto.characteristics.length) {
+      await this.productCharacteristicService.deleteByProductId(id);
+      await this.productCharacteristicService.addingMany(id, addingDto.characteristics);
+    } else {
+      await this.productCharacteristicService.deleteByProductId(id);
+    }
     return this.getById(id);
   }
 
@@ -88,7 +94,7 @@ export class ProductService {
       order: {
         id: 'ASC',
       },
-      relations: ['company', 'saleType']
+      relations: ['company', 'saleType'],
     }).then(
       result => {
         return {
@@ -115,7 +121,7 @@ export class ProductService {
       take: filter.count,
       where: findConditions,
       loadEagerRelations: false,
-      relations: ['saleType']
+      relations: ['saleType'],
     }).then(
       result => {
         return {
@@ -127,9 +133,9 @@ export class ProductService {
   }
 
   async getByIdPublic(id: number): Promise<ProductDetailPublic> {
-    const entity: ProductEntity = await this.repo.findOneOrFail(id, {relations: ['saleType']});
-    const characteristicValueDto = await this.characteristicValueService.getByProductId(id);
-    return { ...plainToClass(ProductDetailPublic, entity), characteristicValues: characteristicValueDto };
+    const entity: ProductEntity = await this.repo.findOneOrFail(id, { relations: ['saleType'] });
+    const characteristics = await this.productCharacteristicService.getByProductId(id);
+    return { ...plainToClass(ProductDetailPublic, entity), characteristics: characteristics };
   }
 
   async getByIdsPublic(ids: number[]) {

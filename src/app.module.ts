@@ -6,13 +6,13 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { CompanyModule } from './modules/company/company.module';
-import { CharacteristicModule } from './modules/characteristic/characteristic.module';
 import { FilesModule } from './modules/files/files.module';
 import { ProductModule } from './modules/product/product.module';
-import { CharacteristicValueModule } from './modules/characteristic-value/characteristic-value.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrderModule } from './modules/order/order.module';
 import { SaleTypeModule } from './modules/sale-type/sale-type.module';
+import { ProductCharacteristicModule } from './modules/product-characteristic/product-characteristic.module';
+import { ProductCharacteristicSuggestModule } from './modules/product-characteristic-suggest/product-characteristic-suggest.module';
 
 @Module({
   imports: [
@@ -25,13 +25,13 @@ import { SaleTypeModule } from './modules/sale-type/sale-type.module';
     CategoryModule,
     UserModule,
     CompanyModule,
-    CharacteristicModule,
     FilesModule,
     ProductModule,
-    CharacteristicValueModule,
     AuthModule,
     OrderModule,
     SaleTypeModule,
+    ProductCharacteristicModule,
+    ProductCharacteristicSuggestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
