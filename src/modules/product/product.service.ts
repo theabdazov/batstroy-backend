@@ -65,10 +65,9 @@ export class ProductService {
   }
 
   async deleteById(id: number): Promise<ProductDto> {
-    const product = await this.getById(id);
-    return this.repo.delete(id).then(
-      () => product,
-    );
+    return this.getById(id).then(product => {
+      return this.productCharacteristicService.deleteByProductId(id).then(() => this.repo.delete(id)).then(() => product);
+    });
   }
 
   getProductList(adminFilter: ProductFilter): Promise<PaginationPageDto<ProductDto>> {
